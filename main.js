@@ -12,7 +12,7 @@ function weather() {
         navigator.geolocation.getCurrentPosition(function (position) {
             latitude =position.coords.latitude ;
             longitude =position.coords.longitude ;
-            getWeather(latitude, longitude);
+            getFetch(latitude, longitude);
         });
     } else {
         alert("err...geolocation disabled!");
@@ -21,15 +21,28 @@ function weather() {
 
 weather(); // to get the geolocation
 
-function getWeather(latitude, longitude) {
-    var xmlHTTP = new XMLHttpRequest();
-    var url = 'https://fcc-weather-api.glitch.me/api/current?lat='+latitude+'&lon='+longitude;
-    xmlHTTP.open('GET', url, true);
-    xmlHTTP.send();
-    xmlHTTP.onload = function() {
-        if (xmlHTTP.status === 200) {
-            var recieved = xmlHTTP.response;
-            recieved = JSON.parse(recieved);
+
+function getFetch(latitude, longitude){
+    var url= 'https://fcc-weather-api.glitch.me/api/current?lat='+latitude+'&lon='+longitude;
+    fetch(url).then(function(data){
+        return data.json();
+    }).then(function(value){
+        show(value);
+    });
+}
+
+// function getWeather(latitude, longitude) {
+//     var xmlHTTP = new XMLHttpRequest();
+//     var url = 'https://fcc-weather-api.glitch.me/api/current?lat='+latitude+'&lon='+longitude;
+//     xmlHTTP.open('GET', url, true);
+//     xmlHTTP.send();
+//     xmlHTTP.onload = function() {
+//         if (xmlHTTP.status === 200) {
+//             var recieved = xmlHTTP.response;
+//             recieved = JSON.parse(recieved);
+
+            function show(recieved){
+                console.log(recieved);
 
             var city = recieved.name + ', ' + recieved.sys.country;
             var cityHTML = '<h2>'+city+'</h2>';
@@ -65,8 +78,9 @@ function getWeather(latitude, longitude) {
                 }
             });
 
-        } else {
-            alert("err...api error!");
+        // } else {
+        //     alert("err...api error!");
+        // }
+    
         }
-    }
-}
+
